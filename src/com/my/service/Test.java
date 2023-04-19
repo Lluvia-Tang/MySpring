@@ -7,6 +7,8 @@ public class Test {
         // 容器根据配置类扫描
         MyApplicationContext applicationContext = new MyApplicationContext(AppConfig.class);
 
+
+
         // 根据名字获取Bean
         UserInterface userService = (UserInterface) applicationContext.getBean("userService");
         userService.test();

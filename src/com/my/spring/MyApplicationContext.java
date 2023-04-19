@@ -13,7 +13,7 @@ public class MyApplicationContext {
 
     private ConcurrentHashMap<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
-    //单例池
+    //单例池 <beanName, Bean>
     private ConcurrentHashMap<String, Object> singletonObjects = new ConcurrentHashMap<>();
 
     private ArrayList<BeanPostProcessor> beanPostProcessorList = new ArrayList<>();
@@ -42,7 +42,7 @@ public class MyApplicationContext {
 //            System.out.println(file); // D:\java_workplace\MySpring\out\production\MySpring\com\my\service
             if (file.isDirectory()){
                 File[] files = file.listFiles();
-                for (File f : files) {
+                for (File f : files) {   //遍历所有的class文件
                     String fileName = f.getAbsolutePath();
 //                    System.out.println(fileName); //D:\java_workplace\MySpring\out\production\MySpring\com\my\service\UserService.class
                     if (fileName.endsWith(".class")){
@@ -63,7 +63,8 @@ public class MyApplicationContext {
 
                                 // 获取bean的名字
                                 Component component = clazz.getAnnotation(Component.class);
-                                String beanName = component.value();
+//                                String beanName = component.value(); // @Component(value="")注解中获取beanName
+                                String beanName = "";
                                 // 自动生成beanName
                                 if (beanName.equals("")){
                                     beanName = Introspector.decapitalize(clazz.getSimpleName());
@@ -103,6 +104,7 @@ public class MyApplicationContext {
             BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
             if (beanDefinition.getScope().equals("singleton")){
                 Object bean = creatBean(beanName, beanDefinition);
+                // 将对象放入单例池
                 singletonObjects.put(beanName, bean);
             }
         }
